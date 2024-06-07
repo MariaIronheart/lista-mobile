@@ -2,8 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Card, FAB, Paragraph, Title } from "react-native-paper";
+import { Button, Text } from "react-native";
+import ListRepository, {Lista} from "../repository/ListRepository";
+
 
 const APP_KEY_STORAGE = "APP_KEY_MY_NOTES";
+const repository = new ListRepository();
 
 type HomeScreenProps = {
     navigation: any
@@ -11,57 +15,51 @@ type HomeScreenProps = {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
-    const [ notes, setNotes ] = useState<string[]>([]);
+    const [list, setList] = useState<Lista[]>([]);
 
-    useEffect( () => {
-        loadNotes();
-    }, []);
-
-    const loadNotes = async () => {
-        try {
-            const notasSalvas = await AsyncStorage.getItem(APP_KEY_STORAGE);
-            if (notasSalvas !== null ){
-                setNotes(JSON.parse(notasSalvas));
+    const criarLista = async () => {
+        const listaId = await repository.create(
+            {
+                type: 'compras',
+                description:'dois ovos'
             }
-        } catch (err) {
-            console.error("Erro ao ler notas:", err);
-            
-        }
+        );
+        console.log(listaId);
     }
 
-    const handleAddNote = async (note: string) => {
-        const newNotes = [ ...notes, note];
-        setNotes(newNotes);
-        try {
-            await AsyncStorage.setItem(
-                APP_KEY_STORAGE, 
-                JSON.stringify(note));
-            navigation.goBack();
-        } catch(err){
-            console.error("Erro ao salvar nota:", err);            
-        }
-        
+    const listarLista = async() => {
+        const list: Lista[] = await repository.listarListas();
+        setList(list);
+        console.log(list);
     }
 
     return(
+
         <View style={styles.container}>
-            <ScrollView>
-                {notes.map((note, index) => (
-                    <Card key={`card-key-${index}`} style={styles.card}>
-                        <Card.Content>
-                            <Title>{`Nota ${index+1}`}</Title>
-                            <Paragraph>{note}</Paragraph>
-                        </Card.Content>
-                    </Card>
-                ))}
-            </ScrollView>
-            <FAB
+            {
+                list.map (lista => (
+                    <View key={`lista-item${lista.id}`}>
+                        <Text style={styles.texto}>{`${lista.type} -
+                                ${lista.description}`}</Text>
+
+                    </View>
+                )) 
+            }
+            <Button onPress={listarLista} title="Listar"/>
+             <FAB
                 style={styles.fab}
                 icon={"plus"}
-                onPress={ () => navigation.navigate('AddNote', { onAddNote: handleAddNote }) }
+                onPress={criarLista}
+                />
+            <FAB
+                style={styles.fablist}
+                icon={"equal"}
+                onPress={listarLista}
                 />
         </View>
     )
+    
+
 }
 
 const styles = StyleSheet.create({
@@ -78,6 +76,15 @@ const styles = StyleSheet.create({
         margin: 16,
         right: 0,
         bottom: 0
+    },
+    fablist: {
+        position:'absolute',
+        margin:16,
+        right: 70,
+        bottom:0
+    },
+    texto: {
+        backgroundColor: 'blue',
     }
 })
 
