@@ -1,10 +1,20 @@
-import React, {useState} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Card, FAB, Paragraph, Title } from "react-native-paper";
+import { Button, Text } from "react-native";
 import ListRepository, {Lista} from "../repository/ListRepository";
-import { Button, Text, View } from "react-native";
 
+
+const APP_KEY_STORAGE = "APP_KEY_MY_NOTES";
 const repository = new ListRepository();
 
-const HomePage: React.FC = () => {
+type HomeScreenProps = {
+    navigation: any
+}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
+
     const [list, setList] = useState<Lista[]>([]);
 
     const criarLista = async () => {
@@ -24,23 +34,58 @@ const HomePage: React.FC = () => {
     }
 
     return(
-        <View>
-            <Button onPress={criarLista} title="Criar"/>
-            <Button onPress={listarLista} title="Listar"/>
+
+        <View style={styles.container}>
             {
                 list.map (lista => (
                     <View key={`lista-item${lista.id}`}>
-                        <Text>{`${lista.type} -
+                        <Text style={styles.texto}>{`${lista.type} -
                                 ${lista.description}`}</Text>
 
                     </View>
                 )) 
             }
-            
+            <Button onPress={listarLista} title="Listar"/>
+             <FAB
+                style={styles.fab}
+                icon={"plus"}
+                onPress={criarLista}
+                />
+            <FAB
+                style={styles.fablist}
+                icon={"equal"}
+                onPress={listarLista}
+                />
         </View>
     )
+    
 
 }
 
-export default HomePage;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+        padding: 16
+    },
+    card: {
+        marginBottom: 16
+    },
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        bottom: 0
+    },
+    fablist: {
+        position:'absolute',
+        margin:16,
+        right: 70,
+        bottom:0
+    },
+    texto: {
+        backgroundColor: 'blue',
+    }
+})
 
+export default HomeScreen;
