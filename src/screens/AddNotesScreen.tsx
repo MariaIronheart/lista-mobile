@@ -17,6 +17,9 @@ const AddNotesScreen: React.FC<AddNoteScreenProps> = ({route}) => {
 
     const [ note, setNote ] = useState<string>('');
 
+    const [ title, setTitle ] = useState<string>('');
+    const [ description, setDescription ] = useState<string>('');
+
     const handleChangeNote = () => {
         if (note.trim() !== ''){
             onAddNote(note)   
@@ -27,8 +30,19 @@ const AddNotesScreen: React.FC<AddNoteScreenProps> = ({route}) => {
         <View style={styles.container}>
             <TextInput 
                 style={styles.input}
+                placeholder="Digite o título da nota..."
+                value={title}
+                onChangeText={setTitle}
+            />
+            <TextInput 
+                style={styles.input}
+                placeholder="Digite a descrição da nota..."
+                value={description}
+                onChangeText={setDescription}
+            />
+            <TextInput 
+                style={styles.input}
                 placeholder="Digite a sua nota..."
-                multiline
                 value={note}
                 onChangeText={setNote}
                 />
