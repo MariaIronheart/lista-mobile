@@ -25,7 +25,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
             }
         } catch (err) {
             console.error("Erro ao ler notas:", err);
-            
         }
     }
 
@@ -34,14 +33,22 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         setNotes(newNotes);
         const notesStringify = JSON.stringify(newNotes);
         try {
-            await AsyncStorage.setItem(
-                APP_KEY_STORAGE, 
-                notesStringify);
+            await AsyncStorage.setItem(APP_KEY_STORAGE, notesStringify);
             navigation.goBack();
         } catch(err){
             console.error("Erro ao salvar nota:", err);            
         }
-        
+    }
+
+    const handleRemoveNote = async (index: number) => {
+        const newNotes = notes.filter((_, i) => i !== index);
+        setNotes(newNotes);
+        const notesStringify = JSON.stringify(newNotes);
+        try {
+            await AsyncStorage.setItem(APP_KEY_STORAGE, notesStringify);
+        } catch (err) {
+            console.error("Erro ao remover nota:", err);
+        }
     }
 
     return(
@@ -52,18 +59,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
                         <Card.Content>
                             <Title>{`Nota ${index+1}`}</Title>
                             <Paragraph>{note}</Paragraph>
+                            <FAB
+                                style={styles.fabRemove}
+                                icon={"delete-forever"}
+                                onPress={() => handleRemoveNote(index)}
+                            />
                         </Card.Content>
-                        
                     </Card>
-                    
                 ))}
             </ScrollView>
             <FAB
                 style={styles.fab}
                 icon={"plus"}
-                onPress={ () => navigation.navigate('AddNote', { onAddNote: handleAddNote }) }
-                />
-                
+                onPress={() => navigation.navigate('AddNote', { onAddNote: handleAddNote })}
+            />
         </View>
     )
 }
@@ -76,6 +85,12 @@ const styles = StyleSheet.create({
     },
     card: {
         marginBottom: 16
+    },
+    fabRemove: {
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        bottom: 0
     },
     fab: {
         position: 'absolute',
