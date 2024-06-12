@@ -28,7 +28,8 @@ const AddNotesScreen: React.FC<AddNoteScreenProps> = ({route}) => {
 
     return(
         <View style={styles.container}>
-            <TextInput 
+            <View style={styles.box}>
+                <TextInput 
                 style={styles.input}
                 placeholder="Digite o título da nota..."
                 value={title}
@@ -40,12 +41,8 @@ const AddNotesScreen: React.FC<AddNoteScreenProps> = ({route}) => {
                 value={description}
                 onChangeText={setDescription}
             />
-            <TextInput 
-                style={styles.input}
-                placeholder="Digite a sua nota..."
-                value={note}
-                onChangeText={setNote}
-                />
+            </View>
+            
             <Button mode="contained" onPress={handleChangeNote}>
                 Adicionar Nota
             </Button>
@@ -66,6 +63,12 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderRadius: 5,
         minHeight: 100
+    },
+    box: {
+        height: 250,
+        padding: 10,
+        marginBottom: 10,
+        backgroundColor: 'purple',
     }
 })
 
