@@ -1,11 +1,15 @@
 import { executeTransation } from "../database/SQLiteDatabase";
 import { StringBuilderUtils } from "../utils/StringBilderUtils";
+import * as SQLite from 'expo-sqlite';
+
 
 export type Lista = {
     id?: number;
     type: string;
     description: string;
 }
+
+
 
 export class ListRepository {
     

@@ -2,12 +2,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Card, FAB, Paragraph, Title } from "react-native-paper";
+import { SQLiteProvider, useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
+
+
+
 
 const APP_KEY_STORAGE = "APP_KEY_MY_NOTES";
 
 type HomeScreenProps = {
     navigation: any
 }
+
 
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
@@ -16,6 +21,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
     useEffect( () => {
         loadNotes();
     }, []);
+
 
     const loadNotes = async () => {
         try {
@@ -51,6 +57,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         }
     }
 
+    const handleEditNote = async (note: string) => {
+            const EditedNotes = [ ...notes, note];
+            setNotes(EditedNotes);
+            const notesStringify = JSON.stringify(EditedNotes);
+            try {
+                await AsyncStorage.setItem(APP_KEY_STORAGE, notesStringify);
+                navigation.goBack();
+            } catch(err){
+                console.error("Erro ao editar nota:", err);            
+            }
+        
+    };
+    
+
     return(
         <View style={styles.container}>
             <ScrollView>
@@ -59,6 +79,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
                         <Card.Content>
                             <Title>{`Nota ${index+1}`}</Title>
                             <Paragraph>{note}</Paragraph>
+                            <FAB
+                                style={styles.fabEdit}
+                                icon={"content-save-edit"}
+                                onPress={() => navigation.navigate('EditNote', { onEditNote: handleEditNote })}
+                            />
                             <FAB
                                 style={styles.fabRemove}
                                 icon={"delete-forever"}
@@ -96,6 +121,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         margin: 16,
         right: 0,
+        bottom: 0
+    },
+    fabEdit: {
+        position: 'absolute',
+        margin: 16,
+        right: 70,
         bottom: 0
     }
 })

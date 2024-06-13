@@ -4,40 +4,39 @@ import { Button, TextInput } from "react-native-paper";
 import { RootStackParamList } from "../types/AppType";
 import { RouteProp } from "@react-navigation/native";
 
-type AddNoteScreenRouteProp = 
-    RouteProp<RootStackParamList, 'AddNote'>;
+type EditNoteScreenRouteProp = 
+    RouteProp<RootStackParamList, 'EditNote'>;
 
-type AddNoteScreenProps = {
-    route: AddNoteScreenRouteProp
+type EditNoteScreenProps = {
+    route: EditNoteScreenRouteProp
 }
 
-const AddNotesScreen: React.FC<AddNoteScreenProps> = ({route}) => {
+const EditNoteScreen: React.FC<EditNoteScreenProps> = ({ route }) => {
     debugger;
-    const { onAddNote } = route.params;
+    const { onEditNote } = route.params;
+    const [EditedNote, setEditedNote] = useState<string>('');
 
-    const [ note, setNote ] = useState<string>('');
-
-    const handleChangeNote = () => {
-        if (note.trim() !== ''){
-            onAddNote(note)   
+    const handleEditNote = async () => {
+        if (EditedNote.trim() !== ''){
+            onEditNote(EditedNote)   
         }
-    }
+    };
 
-    return(
+    return (
         <View style={styles.container}>
             <TextInput 
                 style={styles.input}
-                placeholder="Digite a sua nota..."
+                placeholder="Digite a edição..."
                 multiline
-                value={note}
-                onChangeText={setNote}
-                />
-            <Button mode="contained" onPress={handleChangeNote}>
-                Adicionar Nota
+                value={EditedNote}
+                onChangeText={setEditedNote}
+            />
+            <Button mode="contained" onPress={handleEditNote}>
+                Editar Nota
             </Button>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -53,6 +52,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         minHeight: 100
     }
-})
+});
 
-export default AddNotesScreen;
+export default EditNoteScreen;
