@@ -17,6 +17,8 @@ type HomeScreenProps = {
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
     const [ notes, setNotes ] = useState<string[]>([]);
+    //const [titles, setTitles] = useState('');
+    //const [ descriptions, setDescriptions ] = useState('');
 
     useEffect( () => {
         loadNotes();
@@ -81,7 +83,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
                             <Paragraph>{note}</Paragraph>
                             <FAB
                                 style={styles.fabEdit}
-                                icon={"content-save-edit"}
+                                icon={"playlist-edit"}
                                 onPress={() => navigation.navigate('EditNote', { onEditNote: handleEditNote })}
                             />
                             <FAB

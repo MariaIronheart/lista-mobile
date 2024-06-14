@@ -4,6 +4,7 @@ import { RootStackParamList } from "./src/types/AppType";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./src/screens/HomeScreen";
 import AddNotesScreen from "./src/screens/AddNotesScreen";
+import EditNoteScreen from "./src/screens/EditNotesScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -23,6 +24,12 @@ export default function App() {
               options={{title: 'Adicionar Nota'}}
               initialParams={{ onAddNote: () => {} }}
           />
+          <Stack.Screen
+            name="EditNote"
+            component={EditNoteScreen}
+            options={{title: 'Editar Nota'}}
+            initialParams={{ onEditNote: () => {} }}
+        />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>    

@@ -14,9 +14,9 @@ type AddNoteScreenProps = {
 const AddNotesScreen: React.FC<AddNoteScreenProps> = ({route}) => {
     debugger;
     const { onAddNote } = route.params;
-
     const [ note, setNote ] = useState<string>('');
-
+    //const [title, setTitle] = useState('');
+    //const [ description, setDescription ] = useState('');
     const handleChangeNote = () => {
         if (note.trim() !== ''){
             onAddNote(note)   
@@ -31,7 +31,7 @@ const AddNotesScreen: React.FC<AddNoteScreenProps> = ({route}) => {
                 multiline
                 value={note}
                 onChangeText={setNote}
-                />
+                />         
             <Button mode="contained" onPress={handleChangeNote}>
                 Adicionar Nota
             </Button>
